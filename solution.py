@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
-from scipy.stats import ttest_ind
-from statsmodels.stats.weightstats import ztest
+import scipy.stats as sps
 
 chat_id = 157443210 # Ваш chat ID, не меняйте название переменной
 
@@ -9,6 +8,9 @@ def solution(x: np.array, y: np.array) -> bool: # Одна или две выб�
     # Измените код этой функции
     # Это будет вашим решением
     # Не меняйте название функции и её аргументы
-    z_statistic, p_value = ztest(x, y)
+    p_value = sps.permutation_test((x, y), lambda x, y, axis: np.mean(x, axis=axis) - np.mean(y, axis=axis), 
+                 vectorized=True, 
+                 n_resamples=1000,
+                 alternative='greater').pvalue 
     alpha = 0.01
     return p_value < alpha
